@@ -2,7 +2,13 @@ package com.pharmacy.meds.adapters;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.app.Application;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +18,13 @@ import android.widget.TextView;
 
 import com.pharmacy.meds.R;
 import com.pharmacy.meds.db.entities.Medicament;
+import com.pharmacy.meds.viewmodel.OrderViewModel;
+import com.pharmacy.meds.viewmodel.PharmacyViewModel;
 
 public class MedsAdapter extends RecyclerView.Adapter<MedsAdapter.MyViewHolder> {
 
+    private FragmentActivity mContext;
+    private Application mApplication;
     private List<Medicament> medsList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -27,12 +37,14 @@ public class MedsAdapter extends RecyclerView.Adapter<MedsAdapter.MyViewHolder> 
             quantity = view.findViewById(R.id.quantity);
 
             add = view.findViewById(R.id.add_order);
-            delete = view.findViewById(R.id.delete_order);
+//            delete = view.findViewById(R.id.delete_order);
         }
     }
 
 
-    public MedsAdapter(List<Medicament> medsList) {
+    public MedsAdapter(Application application, FragmentActivity context, List<Medicament> medsList) {
+        this.mApplication = application;
+        this.mContext = context;
         this.medsList = medsList;
         notifyDataSetChanged();
     }
@@ -60,14 +72,23 @@ public class MedsAdapter extends RecyclerView.Adapter<MedsAdapter.MyViewHolder> 
                 .setAction("Action", null).show();
             if (Integer.valueOf(holder.quantity.getText().toString()) > 0) {
                 holder.quantity.setText(String.valueOf(Integer.valueOf(holder.quantity.getText().toString()) - 1));
+
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        OrderViewModel.Factory factory = new OrderViewModel.Factory(mApplication, medicament.ownerId, medicament.mId);
+                        final OrderViewModel viewModel = ViewModelProviders.of(mContext, factory).get(OrderViewModel.class);
+                        return null;
+                    }
+                }.execute();
             }
         });
 
-        holder.delete.setOnClickListener(v -> {
-            Snackbar.make(v, "Medicament Deleted From Basket ", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
-            holder.quantity.setText(String.valueOf(Integer.valueOf(holder.quantity.getText().toString()) + 1));
-        });
+//        holder.delete.setOnClickListener(v -> {
+//            Snackbar.make(v, "Medicament Deleted From Basket ", Snackbar.LENGTH_SHORT)
+//                .setAction("Action", null).show();
+//            holder.quantity.setText(String.valueOf(Integer.valueOf(holder.quantity.getText().toString()) + 1));
+//        });
     }
 
     @Override

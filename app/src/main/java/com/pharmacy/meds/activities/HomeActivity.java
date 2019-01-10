@@ -1,5 +1,10 @@
 package com.pharmacy.meds.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,14 +14,22 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.pharmacy.meds.R;
+import com.pharmacy.meds.adapters.OrdersAdapter;
+import com.pharmacy.meds.db.entities.Order;
+import com.pharmacy.meds.viewmodel.OrderViewModel;
 
 public class HomeActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
+
+    private List<Order> ordersList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private OrdersAdapter mAdapter;
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -41,6 +54,16 @@ public class HomeActivity extends AppCompatActivity
                 finish();
             }
         };
+
+        recyclerView = findViewById(R.id.recycler_view);
+        mAdapter = new OrdersAdapter(getApplication(), this, ordersList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(mAdapter);
+
+        initData();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
@@ -81,5 +104,22 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void initData() {
+        OrderViewModel.Factory factory = new OrderViewModel.Factory(getApplication(), 0, 0);
+        final OrderViewModel viewModel = ViewModelProviders.of(this, factory).get(OrderViewModel.class);
+        subscribeUi(viewModel.getOrders());
+    }
+
+    private void subscribeUi(LiveData<List<Order>> liveData) {
+        // Update the list when the data changes
+        liveData.observe(this, orders -> {
+            if (orders != null) {
+                mAdapter.UpdateAdapterList(orders);
+            } else {
+                Toast.makeText(HomeActivity.this, "No Orders", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

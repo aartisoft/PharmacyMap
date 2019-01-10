@@ -14,15 +14,18 @@ import android.util.Log;
 
 import com.pharmacy.meds.AppExecutors;
 import com.pharmacy.meds.db.daos.MedicamentDao;
+import com.pharmacy.meds.db.daos.OrderDao;
 import com.pharmacy.meds.db.daos.PharmacyDao;
 import com.pharmacy.meds.db.entities.Medicament;
+import com.pharmacy.meds.db.entities.Order;
 import com.pharmacy.meds.db.entities.Pharmacy;
 
-@Database(entities = {Pharmacy.class, Medicament.class}, version = 1)
+@Database(entities = {Pharmacy.class, Medicament.class, Order.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "pharmacy_database";
 
+    public abstract OrderDao orderDao();
     public abstract PharmacyDao pharmacyDao();
     public abstract MedicamentDao medicamentDao();
 

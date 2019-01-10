@@ -1,5 +1,6 @@
 package com.pharmacy.meds.viewmodel;
 
+
 import java.util.List;
 
 import android.app.Application;
@@ -11,27 +12,30 @@ import android.support.annotation.NonNull;
 
 import com.pharmacy.meds.BasicApp;
 import com.pharmacy.meds.DataRepository;
-import com.pharmacy.meds.db.entities.Medicament;
+import com.pharmacy.meds.db.entities.Order;
 
-public class PharmacyViewModel extends AndroidViewModel {
+public class OrderViewModel extends AndroidViewModel {
 
+    private final int mMedId;
     private final int mPharmacyId;
+    private final DataRepository mRepository;
 
-    private LiveData<List<Medicament>> mObservableMedicament;
+    private LiveData<List<Order>> mObservableOrder;
 
-    public PharmacyViewModel(@NonNull Application application, DataRepository mRepository, final int pharmacyId) {
+    public OrderViewModel(@NonNull Application application, DataRepository repository, final int pharmacyId,
+                          final int medId) {
         super(application);
+        mMedId = medId;
         mPharmacyId = pharmacyId;
-
-        mObservableMedicament = mRepository.loadMeds(mPharmacyId);
+        mRepository = repository;
+        if (pharmacyId != 0) {
+            mRepository.insertOrder(new Order(mPharmacyId, mMedId));
+        }
     }
 
-    /**
-     * Expose the LiveData Products query so the UI can observe it.
-     */
-
-    public LiveData<List<Medicament>> getMeds() {
-        return mObservableMedicament;
+    public LiveData<List<Order>> getOrders() {
+        mObservableOrder = mRepository.getOrders();
+        return mObservableOrder;
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
@@ -39,12 +43,15 @@ public class PharmacyViewModel extends AndroidViewModel {
         @NonNull
         private final Application mApplication;
 
+        private final int mMedId;
+
         private final int mPharmacyId;
 
         private final DataRepository mRepository;
 
-        public Factory(@NonNull Application application, int pharmacyId) {
+        public Factory(@NonNull Application application, int pharmacyId, int medId) {
             mApplication = application;
+            mMedId = medId;
             mPharmacyId = pharmacyId;
             mRepository = ((BasicApp) application).getRepository();
         }
@@ -52,7 +59,7 @@ public class PharmacyViewModel extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new PharmacyViewModel(mApplication, mRepository, mPharmacyId);
+            return (T) new OrderViewModel(mApplication, mRepository, mPharmacyId, mMedId);
         }
     }
 }

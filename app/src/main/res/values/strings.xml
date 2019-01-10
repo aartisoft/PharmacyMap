@@ -9,7 +9,7 @@
     <string name="failed">Authentication failed</string>
     <string name="image">image</string>
     <string name="create_a_new_account">Create a new Account!</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Pharmacy</string>
