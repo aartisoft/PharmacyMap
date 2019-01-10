@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">meds</string>
+    <string name="title_activity_sign_in">Sign In</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+
+    <string name="email_id">email id</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="failed">Authentication failed</string>
+    <string name="image">image</string>
+    <string name="create_a_new_account">Create a new Account!</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Pharmacy</string>
+    <string name="nav_header_subtitle">pharmacy@professional.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_maps">Pharmacies Map</string>
+    <string name="title_activity_pharmacy">Pharmacy Meds</string>
+</resources>
