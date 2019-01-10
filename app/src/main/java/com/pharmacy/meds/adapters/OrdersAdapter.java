@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pharmacy.meds.R;
+import com.pharmacy.meds.db.DataGenerator;
 import com.pharmacy.meds.db.entities.Medicament;
 import com.pharmacy.meds.db.entities.Order;
 import com.pharmacy.meds.viewmodel.OrderViewModel;
@@ -57,8 +58,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Order order = ordersList.get(position);
-        holder.pharmacy.setText(String.valueOf(order.pharId));
-        holder.medicament.setText(String.valueOf(order.medId));
+        holder.pharmacy.setText(DataGenerator.getPharmacyName(order.pharId));
+        holder.medicament.setText(DataGenerator.getMedicamentName(order.medId));
     }
 
     @Override
