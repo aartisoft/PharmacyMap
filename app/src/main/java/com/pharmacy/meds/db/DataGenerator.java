@@ -18,8 +18,10 @@ public class DataGenerator {
         return pharmacies;
     }
 
-    public  static List<Medicament> generateMedsForPharmacies(final List<Pharmacy> pharmacies) {
-        List<Medicament> meds = new ArrayList<>();
+//    public  static List<Medicament> generateMedsForPharmacies(final List<Pharmacy> pharmacies) {
+public  static List<Medicament> generateMedsForPharmacies() {
+
+    List<Medicament> meds = new ArrayList<>();
         meds.add(new Medicament(1, "DOLIPRANE", 9));
         meds.add(new Medicament(1, "DAFALGAN", 11));
         meds.add(new Medicament(1, "PREVISCAN", 14));
@@ -57,7 +59,7 @@ public class DataGenerator {
     }
 
     public static String getMedicamentName(int id) {
-        List<Medicament> meds = new ArrayList<>();
+        List<Medicament> meds = generateMedsForPharmacies();
         switch (id) {
             case 1:
                 return meds.get(0).name;

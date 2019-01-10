@@ -57,7 +57,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         // Generate the data for pre-population
                         AppDatabase database = AppDatabase.getInstance(appContext, executors);
                         List<Pharmacy> pharmacies = DataGenerator.generatePharmacies();
-                        List<Medicament> meds = DataGenerator.generateMedsForPharmacies(pharmacies);
+                        List<Medicament> meds = DataGenerator.generateMedsForPharmacies();
 
 
 
